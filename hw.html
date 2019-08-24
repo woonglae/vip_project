@@ -1,0 +1,42 @@
+<html>
+	<head>
+	    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+	    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+
+	</head>
+	<body>
+		<a-scene>
+			<a-assets>
+				<img id="ballTexture" src="https://thumbs.dreamstime.com/z/soccer-ball-vector-seamless-pattern-texture-black-white-hexagon-41960527.jpg"> 
+				<img id="brickTexture" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/-_Brickwall_01_-.jpg/1599px--_Brickwall_01_-.jpg">
+				<audio src="crowd.wav" autoplay="true">
+			</a-assets>
+
+			<a-sphere src="#ballTexture" radius="0.11" position="0 .11 -2">
+				<a-animation begin="mouseenter" attribute="rotation" to ="360 360 0" scale="2" fill="none"></a-animation>
+				<a-animation attribute="position" begin="click" dur="800" to="0 0.5 -9.5" fill="none">
+				</a-animation>
+			</a-sphere>
+
+			<a-box position="2 0 -10" scale="1 1 0.1">
+				<a-animation attribute="position" to="-2 0 -10" direction="alternate" dur="3500" repeat="indefinite">
+				</a-animation>
+			</a-box>
+
+			<a-box src="#brickTexture" scale="1.5 2 0.2" position = "-2 0 -6">
+				<a-animation attribute="position" to="2 0 -6" direction="alternate" dur="2000" repeat="indefinite">
+				</a-animation>
+
+			</a-box>
+			<a-sky src="sky.jpg"></a-sky>
+			<a-entity environment="ground: flat; groundColor: green; groundColor2: green; "></a-entity>
+
+			<a-camera >
+				<a-cursor color="red">
+					
+				</a-cursor>
+			</a-camera>
+		</a-scene>
+	</body>
+</html>
+	

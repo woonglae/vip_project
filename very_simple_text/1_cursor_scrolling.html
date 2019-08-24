@@ -1,0 +1,79 @@
+<html>
+<head>
+  <script src="./js/aframe.min.js"></script>
+  <script src="./js/aframe-lerp-component.min.js"></script>
+  <title>Aframe large text examples</title>
+</head>
+<body>
+
+<a-scene>
+  <a-entity camera look-controls wasd-controls>
+    <a-entity cursor=""
+              position="0 0 -1"
+              geometry="primitive: circle; radius: 0.01"
+              material="color: black; shader: flat">
+    </a-entity>
+  </a-entity>
+  <a-assets>
+    <a-asset-item id="complete" src="3DModels/complete_para.gltf" />
+    <a-asset-item id="para1" src="3DModels/para1.gltf" />
+    <a-asset-item id="para2" src="3DModels/para2.gltf" />
+  </a-assets>
+
+  <!-- Scrolling paragraph behind-->
+  <a-text position="0 7 -6" rotation = "0 0 0" color="#000" value="Cursor-Scrolling paragraphs"></a-text>
+  <a-text position="0 -1.5 -5" cursor-listener id="up-button" rotation = "0 0 0" color="#000" material="color: white; shader: flat" geometry="primitive:plane" value="Up"></a-text>
+  <a-gltf-model id="scrolling-complete-para" position="0 -2 -6" rotation="0 0 0" color="#4CC3D9" src="#complete"></a-gltf-model>
+
+  <a-sky color="#ECECEC"></a-sky>
+
+</a-scene>
+
+<script>
+
+    var speed = 0.3;
+    var updateRate = 100;
+    var timeToScroll = 1000;
+    var toMove = false;
+    var moveTimeout;
+    var lerp = null;
+
+    var moveInDirection = function() {
+        if(lerp == null) {
+            lerp = document.querySelector('#scrolling-complete-para');
+        }
+        if(toMove) {
+            var lerpPosition = lerp.getAttribute('position');
+            var y = lerpPosition.y;
+            var newY = y + speed;
+            var newLerpPos = {
+                x: lerpPosition.x,
+                y: newY,
+                z: lerpPosition.z
+            };
+            lerp.setAttribute('position', newLerpPos);
+            moveTimeout = setTimeout(stopMovement, timeToScroll);
+        }
+    };
+
+    var stopMovement = function() {
+        toMove = false;
+        clearTimeout(moveTimeout);
+    };
+
+    AFRAME.registerComponent('cursor-listener', {
+        init: function () {
+            // var lastIndex = -1;
+            // var COLORS = ['red', 'green', 'blue'];
+            this.el.addEventListener('click', function (evt) {
+                toMove = true;
+                /* lastIndex = (lastIndex + 1) % COLORS.length;
+                document.getElementById('up-button').setAttribute('material', 'color', COLORS[lastIndex]); */
+                console.log('I was clicked at: ', evt.detail.intersection.point);
+                setInterval(moveInDirection, 1000 / updateRate);
+            });
+        }
+    });
+</script>
+</body>
+</html>

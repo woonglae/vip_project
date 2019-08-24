@@ -1,0 +1,227 @@
+<html>
+	<head>
+	    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+	    <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
+	    <script src="https://unpkg.com/aframe-lerp-component/dist/aframe-lerp-component.min.js"></script>
+	</head>
+	<body>
+		<script>
+			var speed = 0.005;
+		    var updateRate = 1000;
+		    var timeToScroll = 4000;
+		    var toMove = false;
+		    var scroll = false;
+		    var moveTimeOut;
+		    var stopTimeOut;
+		    var stopScroll;
+		    var endScroll;
+		    var lerp = null;
+		    var sc = null;
+
+		    var moveInUpDirection = function() {
+		    	if(lerp == null) {
+            		lerp = document.getElementById('text');
+        		}
+		        if(toMove) {
+		            var lerpPosition = lerp.getAttribute('position');
+		            var y = lerpPosition.y;
+		            var newY = y + speed;
+		            var newLerpPos = {
+		                x: lerpPosition.x,
+		                y: newY,
+		                z: lerpPosition.z
+		            };
+		            lerp.setAttribute('position', newLerpPos);
+		        }
+		    };
+
+		    var moveInDownDirection = function() {
+		    	if(lerp == null) {
+		    		lerp = document.getElementById('text');
+		    	}
+		    	if(toMove) {
+		    		var lerpPosition = lerp.getAttribute('position');
+		    		var y = lerpPosition.y;
+		    		var newY = y - speed;
+		    		var newLerpPos = {
+		    			x: lerpPosition.x,
+		    			y: newY,
+		    			z: lerpPosition.z
+		    		};
+		    		lerp.setAttribute('position', newLerpPos);
+		    	}
+		    }
+
+    var scrollUp = function() {
+    	if(lerp == null){
+    		lerp = document.getElementById('scrollBar');
+    	}
+    	if(scroll) {
+	    	var scPosition = lerp.getAttribute('position');
+	    	var scHeight = lerp.getAttribute('height');
+	    	var newHeight = scHeight + speed;
+	    	var Yval = scPosition.y;
+	    	var newYval = Yval + speed;
+	    	var newPosition = {
+	    		x:scPosition.x,
+	    		y:newYval,
+	    		z:scPosition.z
+	    	};
+	    	lerp.setAttribute('position', newPosition);
+	    	lerp.setAttribute('hight', newHeight);
+	    }
+    }
+
+    var stopScrollF = function() {
+    	scroll = false;
+    	clearTimeout(stopScroll);
+    	clearInterval(endScroll);
+    }
+		    var stopMovement = function() {
+		        toMove = false;
+		        clearTimeout(stopTimeOut);
+		        clearInterval(moveTimeOut)
+		    };
+
+		    AFRAME.registerComponent('cursor-listener1', {
+		        init: function () {
+		            this.el.addEventListener('click', function (evt) {
+		            	if (toMove == false) {		
+			                toMove = true;
+			                moveTimeOut = setInterval(moveInUpDirection, 1000 / updateRate);
+			                stopTimeOut = setTimeout(stopMovement, timeToScroll);
+			                scroll = true;
+			                stopScroll = setInterval(scrollUp, 1000/ updateRate);
+			                endScroll = setTimeout(stopScrollF, timeToScroll);
+
+			            }
+		            });
+		        }
+		    });
+
+		    AFRAME.registerComponent('cursor-listener2', {
+		        init: function () {
+		            this.el.addEventListener('click', function (evt) {
+		            	if (toMove == false) {		
+			                toMove = true;
+			                moveTimeOut = setInterval(moveInDownDirection, 1000 / updateRate);			              
+			                stopTimeOut = setTimeout(stopMovement, timeToScroll);
+			            }
+		            });
+		        }
+		    });
+
+		    var findSign = function (input) {
+			   if(input < 0) return -1;
+			   else return 1;
+			}
+
+
+		    AFRAME.registerComponent('3dtexteffect', {
+			   schema: {
+			       initialOffset: {type:'vec3', default: {x: 0.15, y: 1.5, z: 0.15}},
+			       secondaryColor: {type:'color', default: '#000'},
+			       multiplier: {type: 'float', default: 0.01}
+			   },
+
+			   init: function() {
+			           // get three.js object from aframe entity
+			           var textPosition = new THREE.Vector3();
+			           //textPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
+			           this.el.object3D.getWorldPosition(textPosition);
+			           var calculatedPosition = {x: this.data.initialOffset.x * this.data.multiplier * findSign(textPosition.x),
+			               y: this.data.initialOffset.y * this.data.multiplier,
+			               z: this.data.initialOffset.z * this.data.multiplier * findSign(textPosition.z)};
+			            
+			           this.copiedText = document.createElement('a-text');
+			            for (var i = 0; i < this.el.attributes.length; i++) {
+			                if(this.el.attributes[i].name != "3dtexteffect") {
+			                    var attrib = this.el.attributes[i];
+			                    this.copiedText.setAttribute(attrib.name, attrib.value);
+			                }
+			            }
+			           this.copiedText.setAttribute('position', calculatedPosition);
+			           this.copiedText.setAttribute('color', this.data.secondaryColor);
+			           this.el.appendChild(this.copiedText);
+			           this.textNotAdded = true;
+			   }
+			});
+
+		</script>
+			
+
+		<a-scene>
+			<a-assets>
+			</a-assets>	
+
+			<a-entity id="text" visible="false" position="0 -8 -5">
+				<!-- <a-gltf-model src="3DModels/complete_para.gltf" color="#000">	
+                </a-gltf-model> -->
+                <a-text color="#000" position="-2.5 0 0" 3dtexteffect="secondaryColor: #222" font="./fonts/sb.fnt" value="McCloud's thoughtful and at the same\ntime playful approach inspired us to\ntry to explain a medium in and through\nthe same medium. What McCloud did for\ncomics, we want to do for VR and AR.\nAt first we imagined that we could\nsimply create a digital form that\nwould contain a book's worth of text\nand at the same time be an augmented\nor virtual application. But we soon\nrealized that that would not work.\nOne reason that McCloud was able to\nwrite a treatise on comics in the form\nof a comic is that both a traditional\nmonograph and a comic exist in the\nsame medium of ink on paper. Both\nconsist of text and illustrations,\nalthough in different forms and ratios.\nIn our case, however, AR and VR cannot\nfunction as reality media on the printed\npage; they are born digital media forms.\nIt is difficult to illustrate AR and VR\nin the pages of a printed book, and\nequally difficult to incorporate a\nlengthy textual discussion in an AR or\nVR application.\n\nSo while McCloud was able to express\nhimself in a single medium, we have\nto use two separate formats: print\nand digital. These two formats enable\nus to present reality media from two\nperspectives: from the “inside” as well\nas the “outside”. The purpose of the\ndigital version is not merely to\nillustrate the affordances of the new\nmedia for the reader, but to allow her\nto enact or even to inhabit the media.\nThe printed book provides a perspective\nthat is the opposite of an immersive\nexperience of AR and VR: a critical\nexplanation of these media in the\ncontexts of media history and their\ndesign aesthetics. The printed version\ncan also address the making of the digital\nversion and reflect on the future\npotential of the digital book. The printed\nbook is independent of the digital,\nalthough the two are in dialogue. The\nreader will be able to understand the\nprinted book without using the digital\nversion, but her understanding will be\nenhanced if she experiences both forms."></a-text>
+                <a-plane color="#FFF" height="20"  width="7">
+                </a-plane>
+        	</a-entity>	
+        		<a-entity id="scrollBar" position="2.3 3.5 -3.999" >
+	        		<a-plane color="red" width="0.1" height="0.5" ></a-plane>
+	        	</a-entity>
+
+        		<a-plane color="black" position="2.3 0 -4" width="0.1" height="7"></a-plane>
+
+        		<a-plane color="#FFF" width="7" height="10" position="0 7.5 -4.5"></a-plane>
+
+        		<a-plane color="#FFF" width="7" height="10" position="0 -7.5 -4.5"></a-plane>
+
+				<a-box color="tomato" depth=".1" height=".5" width="0.5" position="3 0 -4" 
+				event-set__enter="_event: click; _target: #text; visible: true">
+				</a-box>
+
+				<a-box color="green" depth=".1" height=".5" width="0.5" position="4 0 -4" 
+				event-set__enter="_event: click; _target: #text; visible: false">
+				</a-box>
+
+				<!-- This is for the position of text -->
+				<!-- <a-box color="black" depth=".1" height=".5" width="0.5" position="-3 -1 -4" 
+				event-set__enter="_event: click; _target: #text; position: 0 -8 -5">
+				</a-box>
+
+				<a-box color="black" depth=".1" height=".5" width="0.5" position="-4 -1 -4" 
+				event-set__enter="_event: click; _target: #text; position: 0 -8 -7">
+				</a-box>
+
+				<a-box color="black" depth=".1" height=".5" width="0.5" position="-5 -1 -4" 
+				event-set__enter="_event: click; _target: #text; position: 0 -8 -10">
+				</a-box>
+ -->			
+
+ 				<!-- This is for the scale -->
+				<a-box color="yellow" depth=".1" height=".5" width="0.5" position="-3 -2 -4" 
+				event-set__enter="_event: click; _target: #text; scale: 1 1 1"
+				>
+				</a-box>
+
+				<a-box color="yellow" depth=".1" height=".5" width="0.5" position="-4 -2 -4" 
+				event-set__enter="_event: click; _target: #text; scale: 1.3 1.3 1.3"
+				>
+				</a-box>
+
+				<a-box color="yellow" depth=".1" height=".5" width="0.5" position="-5 -2 -4s" 
+				event-set__enter="_event: click; _target: #text; scale: 1.6 1.6 1.6"
+				>
+				</a-box>
+
+				<a-text position="3 -1 -4" cursor-listener1 id="up-button" rotation = "0 0 0" color="#000" material="color: red; shader: flat" geometry="primitive:plane" value="Up"></a-text>
+
+				<a-text position="3 -2 -4" cursor-listener2 id="down-button" rotation = "0 0 0" color="#000" material="color: blue; shader: flat" geometry="primitive:plane" value="Down"></a-text>
+				
+
+				<a-camera position="0 0 2">
+					<a-cursor color="red"></a-cursor>
+				</a-camera>
+
+
+		</a-scene>
+
+		
+	</body>
+</html>
+	

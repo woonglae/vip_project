@@ -1,0 +1,31 @@
+<html>
+	<head>
+	    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+	     <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
+	</head>
+	<body>
+		<a-scene>
+			<a-assets>
+				<a-asset-item id="text" src="3DModels/complete_para.gltf" ></a-asset-item>
+			</a-assets>	
+				<a-gltf-model position="0 0 -5" rotation="0 0 0 " src="#text" event-set__enter="_event: mouseenter; _target: #cylinderText; visible: true"
+                event-set__leave="_event: mouseleave; _target: #cylinderText; visible: false">
+      				<a-text id="cylinderText" value="This is a cylinder" align="center" color="#FFF" visible="false" position="0 -0.55 0.55">
+              	
+             	 </a-text>
+					
+
+				</a-gltf-model>
+
+				<a-camera >
+					<a-cursor color="red"></a-cursor>
+
+					<!-- moving camera -->
+					<!-- <a-animation attribute="position" from="0 4 0" to="0 -8 0"
+               dur="50000" fill="backward" easing="linear"></a-animation> -->
+				</a-camera>
+			
+		</a-scene>
+	</body>
+</html>
+	

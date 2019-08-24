@@ -1,0 +1,145 @@
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2682472,
+            "max": [
+                13.328425407409668,
+                0.30000001192092896,
+                16.364587783813477
+            ],
+            "min": [
+                -12.834196090698242,
+                -0.30000001192092896,
+                -16.43894386291504
+            ],
+            "name": "accessor_buffer_CUText_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 2682472,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_CUText_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 4515576,
+            "max": [
+                2682471
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_CUText_0",
+            "type": "SCALAR"
+        }
+    ],
+    "asset": {
+        "copyright": "",
+        "generator": "blendergltf v1.2.0",
+        "version": "2.0"
+    },
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 32189664,
+            "byteOffset": 0,
+            "byteStride": 12,
+            "name": "bufferView_buffer_CUText_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 32189664,
+            "byteOffset": 32189664,
+            "byteStride": 12,
+            "name": "bufferView_buffer_CUText_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 18062308,
+            "byteOffset": 64379328,
+            "name": "bufferView_buffer_CUText_0",
+            "target": 34963
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 82441636,
+            "name": "buffer_complete_para_thick",
+            "uri": "buffer_complete_para_thick.bin"
+        }
+    ],
+    "meshes": [
+        {
+            "name": "CUText",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 1,
+                        "POSITION": 0
+                    },
+                    "indices": 2,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "mesh": 0,
+            "name": "Text",
+            "rotation": [
+                -5.338507591545749e-08,
+                -0.7071067690849304,
+                -0.7071067690849304,
+                5.338507591545749e-08
+            ],
+            "scale": [
+                0.30000001192092896,
+                0.30000001192092896,
+                0.30000001192092896
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "extras": {
+                "background_color": [
+                    0.05,
+                    0.05,
+                    0.05
+                ],
+                "frames_per_second": 24
+            },
+            "name": "Scene",
+            "nodes": [
+                0
+            ]
+        }
+    ]
+}

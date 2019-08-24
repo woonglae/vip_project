@@ -1,0 +1,89 @@
+<html>
+<head>
+  <script src="./js/aframe.min.js"></script>
+  <script src="./js/aframe-lerp-component.min.js"></script>
+  <title>Aframe large text examples</title>
+</head>
+<body>
+<script>
+    AFRAME.registerComponent('hover-log', {
+        schema: {
+            event: {type: 'string', default: 'logger'}
+        },
+
+        init: function () {
+            var data = this.data;
+            var el = this.el;
+
+            el.addEventListener('mouseenter', function () {
+                console.log("enter");
+            });
+
+            el.addEventListener('mouseleave', function () {
+                console.log("left");
+            });
+        }
+    });
+</script>
+<a-scene>
+  <a-assets>
+    <a-asset-item id="complete-thick" src="3DModels/complete_para_thick.gltf" />
+    <a-asset-item id="complete-samsung" src="3DModels/complete_para_samsung.gltf" />
+    <a-asset-item id="complete" src="3DModels/complete_para.gltf" />
+    <a-asset-item id="para1" src="3DModels/para1.gltf" />
+    <a-asset-item id="para2" src="3DModels/para2.gltf" />
+  </a-assets>
+
+  <a-plane position="0 0 4" rotation="-90 0 0" width="4" height="10" color="#7BC8A4"></a-plane>
+  <a-sky color="#ECECEC"></a-sky>
+
+  <!-- Using the asset management system. -->
+  <!-- Paragraphs in front -->
+  <a-text position="-4 10 -6" color="#000" value="Static long paragraph"></a-text>
+  <a-gltf-model position="-3 1.5 -6" rotation="0 0 0" color="#4CC3D9" src="#complete"></a-gltf-model>
+  <a-text position="2 10 -6" color="#000" value="Static good font"></a-text>
+  <a-gltf-model position="3 1.5 -6" rotation="0 0 0" src="#complete-samsung"></a-gltf-model>
+  <a-entity position="3 1.5 -7" geometry="primitive: plane; height: 19; width: 7" material="side: double; color: #000"></a-entity>
+
+  <!-- Paragraph on the right side -->
+  <a-text width="7.0" position="7 4 2" rotation = "0 -90 0" color="#000" value="Side by side paragraphs"></a-text>
+  <a-gltf-model position="7 1 2" rotation="0 -90 0" color="#FFF" src="#para1"></a-gltf-model>
+  <a-gltf-model position="7 1 10.5" rotation="0 -90 0" color="#4CC3D9" src="#para2"></a-gltf-model>
+
+  <!-- Auto-scrolling paragraph on the left side -->
+  <a-text position="-7 0 10" rotation = "0 90 0" color="#000" value="Auto-Scrolling paragraphs"></a-text>
+  <a-gltf-model id="scrolling-complete-para" lerp="properties: position" position="-7 -3.5 2" rotation="0 90 0" color="#4CC3D9" src="#complete-thick"></a-gltf-model>
+</a-scene>
+
+<script>
+    var lerp = document.querySelector('#scrolling-complete-para');
+
+    var speed = 0.01;
+    var updateRate = 100;
+    var timeToStop = 23000;
+    var toMove = true;
+
+    var moveInDirection = function() {
+        if(toMove) {
+            var lerpPosition = lerp.getAttribute('position');
+            var y = lerpPosition.y;
+            var newY = y + speed;
+            var newLerpPos = {
+                x: lerpPosition.x,
+                y: newY,
+                z: lerpPosition.z
+            };
+            lerp.setAttribute('position', newLerpPos);
+        }
+    };
+
+    var stopMovement = function() {
+        toMove = false;
+        setTimeout(function() { toMove = true; lerp.setAttribute('position', {x: -7, y: -3.5, z: 2}); }, 5000);
+    };
+
+    setTimeout(function() { setInterval(moveInDirection, 1000 / updateRate); }, 5000);
+    setInterval(stopMovement, timeToStop);
+</script>
+</body>
+</html>
